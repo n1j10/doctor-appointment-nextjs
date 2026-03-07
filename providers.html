@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Providers Listing Grid - BookEasy</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS with Config -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#137fec",
+                        "primary-dark": "#0b5cb3",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                    },
+                    fontFamily: {
+                        display: ["Manrope", "sans-serif"],
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display transition-colors duration-200">
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+<!-- Header -->
+<header class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-6 py-4 lg:px-10">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-3">
+<div class="flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-4xl">medical_services</span>
+</div>
+<h2 class="text-xl font-bold leading-tight tracking-tight">BookEasy</h2>
+</div>
+<div class="hidden md:flex w-full max-w-sm items-center rounded-lg bg-slate-100 dark:bg-slate-800 px-3 py-2">
+<span class="material-symbols-outlined text-slate-500">search</span>
+<input class="ml-2 flex-1 bg-transparent text-sm font-medium outline-none placeholder:text-slate-500 dark:text-white" placeholder="Search providers..."/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<nav class="hidden lg:flex items-center gap-6">
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Find Providers</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">My Appointments</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Support</a>
+</nav>
+<div class="flex items-center gap-4">
+<a class="hidden sm:block text-sm font-medium hover:text-primary transition-colors" href="#">Log In</a>
+<button class="flex items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-primary-dark">
+                        Sign Up
+                    </button>
+</div>
+</div>
+</header>
+<!-- Main Content Layout -->
+<div class="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-6 p-4 md:flex-row md:p-8">
+<!-- Sidebar / Filters -->
+<aside class="w-full md:w-64 lg:w-72 flex-shrink-0">
+<div class="sticky top-4 rounded-xl bg-white dark:bg-slate-900 p-5 shadow-sm border border-slate-100 dark:border-slate-800">
+<div class="mb-6">
+<h2 class="text-lg font-bold">Filters</h2>
+<p class="text-sm text-slate-500 dark:text-slate-400">Refine your search</p>
+</div>
+<div class="flex flex-col gap-1">
+<!-- Active Filter Item -->
+<button class="flex w-full items-center gap-3 rounded-lg bg-primary/10 px-3 py-2.5 text-left text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">category</span>
+<span class="text-sm font-semibold">Category</span>
+</button>
+<!-- Inactive Filter Items -->
+<button class="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined text-[20px]">attach_money</span>
+<span class="text-sm font-medium">Price Range</span>
+</button>
+<button class="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined text-[20px]">calendar_month</span>
+<span class="text-sm font-medium">Availability</span>
+</button>
+<button class="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined text-[20px]">location_on</span>
+<span class="text-sm font-medium">Location</span>
+</button>
+<button class="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined text-[20px]">star</span>
+<span class="text-sm font-medium">Rating</span>
+</button>
+</div>
+<div class="mt-8 border-t border-slate-100 dark:border-slate-800 pt-6">
+<h3 class="mb-3 text-sm font-semibold">Specialties</h3>
+<div class="flex flex-col gap-2">
+<label class="flex items-center gap-3 cursor-pointer group">
+<div class="relative flex items-center">
+<input checked="" class="peer h-4 w-4 rounded border-slate-300 text-primary focus:ring-primary dark:border-slate-600 dark:bg-slate-800" type="checkbox"/>
+</div>
+<span class="text-sm text-slate-600 dark:text-slate-300 group-hover:text-primary transition-colors">Physiotherapy</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<div class="relative flex items-center">
+<input class="peer h-4 w-4 rounded border-slate-300 text-primary focus:ring-primary dark:border-slate-600 dark:bg-slate-800" type="checkbox"/>
+</div>
+<span class="text-sm text-slate-600 dark:text-slate-300 group-hover:text-primary transition-colors">Chiropractor</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<div class="relative flex items-center">
+<input class="peer h-4 w-4 rounded border-slate-300 text-primary focus:ring-primary dark:border-slate-600 dark:bg-slate-800" type="checkbox"/>
+</div>
+<span class="text-sm text-slate-600 dark:text-slate-300 group-hover:text-primary transition-colors">Massage Therapy</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<div class="relative flex items-center">
+<input class="peer h-4 w-4 rounded border-slate-300 text-primary focus:ring-primary dark:border-slate-600 dark:bg-slate-800" type="checkbox"/>
+</div>
+<span class="text-sm text-slate-600 dark:text-slate-300 group-hover:text-primary transition-colors">Nutritionist</span>
+</label>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex flex-1 flex-col">
+<!-- Breadcrumbs -->
+<nav class="mb-4 flex flex-wrap items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
+<a class="hover:text-primary hover:underline" href="#">Home</a>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<a class="hover:text-primary hover:underline" href="#">Health &amp; Wellness</a>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<span class="font-medium text-slate-900 dark:text-white">Physiotherapists</span>
+</nav>
+<!-- Hero / Banner -->
+<div class="relative mb-8 overflow-hidden rounded-xl bg-slate-900 shadow-md">
+<div class="absolute inset-0 bg-gradient-to-r from-slate-900/90 to-transparent z-10"></div>
+<div class="relative z-20 flex h-full min-h-[180px] flex-col justify-center px-8 py-6">
+<h1 class="mb-2 text-2xl font-bold text-white md:text-3xl">Find the Best Specialists Near You</h1>
+<p class="max-w-lg text-slate-300 text-sm md:text-base">Connect with top-rated professionals for your health and wellness needs. Book appointments instantly.</p>
+</div>
+<img alt="Medical professionals working in a modern office" class="absolute inset-0 h-full w-full object-cover opacity-60" data-alt="Medical professionals working in a modern office" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSHrXdqKtuCuZwkiv9yC0cCPALGVX7qbzTozJsh6Jx_tYrgWsrfFqUGGhX_iWK9V8xzkwx7xT_MYljv8hUcoCFjtljgvB5irup1QQfbcnxrNvM-KKE9N7EriiCwjDwVpgTeCpJcy2UK9YQtHRrCBCSnL2y6eApv0I0d5ALMDRAKC3LdBAVj9Z36WJwGla4K7jXnoHqL3UNI-jnRX0J0gUxWOLqgwr0T2_UcJ1TEa3rtTYmPtp6X5TGSZ6GVJLoBZDH3PLJGYJz9-4"/>
+</div>
+<!-- Sort & Count -->
+<div class="mb-6 flex flex-wrap items-center justify-between gap-4">
+<h2 class="text-xl font-bold text-slate-900 dark:text-white">Available Specialists <span class="ml-2 rounded-full bg-slate-100 dark:bg-slate-800 px-2 py-0.5 text-sm font-medium text-slate-600 dark:text-slate-300">124</span></h2>
+<div class="flex items-center gap-2">
+<span class="text-sm font-medium text-slate-500 dark:text-slate-400">Sort by:</span>
+<select class="rounded-lg border-none bg-slate-100 dark:bg-slate-800 py-1.5 pl-3 pr-8 text-sm font-medium text-slate-900 dark:text-white focus:ring-1 focus:ring-primary">
+<option>Recommended</option>
+<option>Highest Rated</option>
+<option>Price: Low to High</option>
+<option>Price: High to Low</option>
+</select>
+</div>
+</div>
+<!-- Grid -->
+<div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
+<!-- Card 1 -->
+<div class="group flex flex-col rounded-xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 shadow-sm transition-all hover:shadow-md hover:border-primary/30">
+<div class="relative mb-4 h-48 w-full overflow-hidden rounded-lg">
+<img alt="Portrait of Dr. Sarah Jenkins" class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" data-alt="Portrait of a female doctor smiling" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXBJ9KsSetSPavgwRwwtThLBBBWA3l_w62FtY8WcB5rBexU3vOefHGyxH0Ng7K3dOVZc9PrpYHY9geYx0gUTRdrKwH4bjT0p7tf8TuRIkeOIF-sAe7D1BpL8_fvXgTaArqBL4U-HJ5VnTjJj6JfWcyqyCLkbxLRbVtUnHA_ZH75YFM3wWPqmR-kHeMKWREPq3k89ZG62-DPj4NwzfNt1d3wEpAIHlj64PoIgi5eeKKrK6FRuohjeD-jkNyBbi0ymW0kL9JtGcyJTU"/>
+<div class="absolute right-2 top-2 rounded bg-white/90 px-1.5 py-0.5 text-xs font-bold text-slate-900 shadow-sm backdrop-blur-sm">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-yellow-500 fill-1">star</span>
+                                    4.9 (120)
+                                </div>
+</div>
+</div>
+<div class="mb-1 flex items-start justify-between">
+<div>
+<h3 class="font-bold text-slate-900 dark:text-white text-lg">Dr. Sarah Jenkins</h3>
+<p class="text-sm text-primary font-medium">Senior Physiotherapist</p>
+</div>
+<button class="text-slate-400 hover:text-primary">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+<p class="mb-4 text-sm text-slate-500 dark:text-slate-400 line-clamp-2">Specializes in sports injuries and post-operative rehabilitation with 10+ years of experience.</p>
+<div class="mt-auto flex flex-col gap-3">
+<div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined text-[16px]">location_on</span>
+<span>Downtown Wellness Center</span>
+</div>
+<div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined text-[16px]">payments</span>
+<span>$80 - $120 / session</span>
+</div>
+<button class="mt-2 w-full rounded-lg bg-primary py-2.5 text-sm font-bold text-white transition-colors hover:bg-primary-dark">
+                                Book Now
+                            </button>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="group flex flex-col rounded-xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 shadow-sm transition-all hover:shadow-md hover:border-primary/30">
+<div class="relative mb-4 h-48 w-full overflow-hidden rounded-lg">
+<img alt="Portrait of Dr. Michael Chen" class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" data-alt="Portrait of a male doctor in white coat" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCmuHp5DFEDKIo8QoYkiI3avV9nXjwKP_Vd3ayqWu8ezjKGk1Tqx40uTLIb95NQWiwD8Vn-49551ESmPnBKFFuystNBCFycKkqL49r5par_CCLsjmf1eqLhuSlwHa09D5g1m7rhlokmx9KuMk_YgiDtuQs4ZmVerwhCKtnytArlUdG_3-3gKPCTJn51vR7_V2t1tF6zWZ5sElARyAYMbfD3Oc2PzFeTMA1tfxCtJN6_xjc9OyRDjaDF3hEyibTs_0CxigP5_re5MrY"/>
+<div class="absolute right-2 top-2 rounded bg-white/90 px-1.5 py-0.5 text-xs font-bold text-slate-900 shadow-sm backdrop-blur-sm">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-yellow-500 fill-1">star</span>
+                                    4.8 (85)
+                                </div>
+</div>
+</div>
+<div class="mb-1 flex items-start justify-between">
+<div>
+<h3 class="font-bold text-slate-900 dark:text-white text-lg">Dr. Michael Chen</h3>
+<p class="text-sm text-primary font-medium">Chiropractor</p>
+</div>
+<button class="text-slate-400 hover:text-primary">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+<p class="mb-4 text-sm text-slate-500 dark:text-slate-400 line-clamp-2">Expert in spinal adjustments and pain relief therapies. Holistic approach to wellness.</p>
+<div class="mt-auto flex flex-col gap-3">
+<div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined text-[16px]">location_on</span>
+<span>Westside Clinic</span>
+</div>
+<div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined text-[16px]">payments</span>
+<span>$95 / session</span>
+</div>
+<button class="mt-2 w-full rounded-lg bg-primary py-2.5 text-sm font-bold text-white transition-colors hover:bg-primary-dark">
+                                Book Now
+                            </button>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="group flex flex-col rounded-xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 shadow-sm transition-all hover:shadow-md hover:border-primary/30">
+<div class="relative mb-4 h-48 w-full overflow-hidden rounded-lg">
+<img alt="Portrait of Emily Rose" class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" data-alt="Portrait of a female therapist smiling" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWjOT-b8_x4DG0BpiLiiuVThinKnfrG0ksHO4lAENtZ6YNg_Jitm7GNv4ZCqPJoLCAyxqphgBg6sQ6-4ZMlOJpnEKS6qOHRmOtoP4oCMMoBXVR0aS8ARA-IEjVLetSlZJXV1RayCrv2IaMyHXeGsowqoc1FywIv5yRfzHcioPXtFpm36sYkLSv9sjQ-06j6DMLGL93K0lYd4EHMjR9dVHmpubPYP3xd3s74lOtmT9M_qAogq44CCLzL6ZLfd42HHGlMtOAxBV6c-8"/>
+<div class="absolute right-2 top-2 rounded bg-white/90 px-1.5 py-0.5 text-xs font-bold text-slate-900 shadow-sm backdrop-blur-sm">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-yellow-500 fill-1">star</span>
+                                    5.0 (42)
+                                </div>
+</div>
+</div>
+<div class="mb-1 flex items-start justify-between">
+<div>
+<h3 class="font-bold text-slate-900 dark:text-white text-lg">Emily Rose</h3>
+<p class="text-sm text-primary font-medium">Massage Therapist</p>
+</div>
+<button class="text-slate-400 hover:text-primary">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+<p class="mb-4 text-sm text-slate-500 dark:text-slate-400 line-clamp-2">Certified massage therapist focusing on deep tissue and sports massage recovery.</p>
+<div class="mt-auto flex flex-col gap-3">
+<div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined text-[16px]">location_on</span>
+<span>Serenity Spa</span>
+</div>
+<div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined text-[16px]">payments</span>
+<span>$110 / hour</span>
+</div>
+<button class="mt-2 w-full rounded-lg bg-primary py-2.5 text-sm font-bold text-white transition-colors hover:bg-primary-dark">
+                                Book Now
+                            </button>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="group flex flex-col rounded-xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 shadow-sm transition-all hover:shadow-md hover:border-primary/30">
+<div class="relative mb-4 h-48 w-full overflow-hidden rounded-lg">
+<img alt="Portrait of Dr. James Wilson" class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" data-alt="Portrait of a male doctor smiling" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCqVG8c17PhVPAABIBDCs8Km1tqQ4So1glCADUhyPUGE0FXfsLdjAPSUQgICCQ37kgcwEZcr_vSoHWvOr8T0RMK5R3lOD5spjsq2HC53bna83yjN22h4MclwWeB9CcCLY0AKIZsP-IbQStudc8BaOcPF86MjdCx0r4rR7avGZWZjP9OQbu1w1RyCAK8iEG5WFMHIuuM4wLXRkWh-weEl3ZFmYTRE7tWrP5UgR4WYb6ezq7A_E53gxkc4qxxmLPOu7AZFrptFTXbhQ4"/>
+<div class="absolute right-2 top-2 rounded bg-white/90 px-1.5 py-0.5 text-xs font-bold text-slate-900 shadow-sm backdrop-blur-sm">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-yellow-500 fill-1">star</span>
+                                    4.7 (215)
+                                </div>
+</div>
+</div>
+<div class="mb-1 flex items-start justify-between">
+<div>
+<h3 class="font-bold text-slate-900 dark:text-white text-lg">Dr. James Wilson</h3>
+<p class="text-sm text-primary font-medium">Orthopedic Specialist</p>
+</div>
+<button class="text-slate-400 hover:text-primary">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+<p class="mb-4 text-sm text-slate-500 dark:text-slate-400 line-clamp-2">Providing comprehensive care for bone, joint, and muscle conditions.</p>
+<div class="mt-auto flex flex-col gap-3">
+<div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined text-[16px]">location_on</span>
+<span>City Hospital Annex</span>
+</div>
+<div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined text-[16px]">payments</span>
+<span>$150 / consult</span>
+</div>
+<button class="mt-2 w-full rounded-lg bg-primary py-2.5 text-sm font-bold text-white transition-colors hover:bg-primary-dark">
+                                Book Now
+                            </button>
+</div>
+</div>
+<!-- Card 5 -->
+<div class="group flex flex-col rounded-xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 shadow-sm transition-all hover:shadow-md hover:border-primary/30">
+<div class="relative mb-4 h-48 w-full overflow-hidden rounded-lg">
+<img alt="Portrait of Linda Martinez" class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" data-alt="Portrait of a female nutritionist" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqvntaoLWQl4iOQaAGmT-Oos7SWZm9eaWt_8jM0VI2WwjmNa97DsgLU3EdSeWzpx6mTZFyN_SWI5HUDl1i9amvtlTs8l4qw_f_uZue0-5pmtFCrBO-2SZ7Im7WKhVVr17qGKZs3remClz7WtYLT4mneQP-152oNWsfxFvYyNPrhCua-HKWaZmF0vbSn-Cg5buccQVG6fnAQ7CqSbr3tSQCAhVr5FxLQo7RX2EtkpAtNe8LGTV4zeWc9E9kfyjYh_Q0GO3uDlkERDo"/>
+<div class="absolute right-2 top-2 rounded bg-white/90 px-1.5 py-0.5 text-xs font-bold text-slate-900 shadow-sm backdrop-blur-sm">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-yellow-500 fill-1">star</span>
+                                    4.9 (56)
+                                </div>
+</div>
+</div>
+<div class="mb-1 flex items-start justify-between">
+<div>
+<h3 class="font-bold text-slate-900 dark:text-white text-lg">Linda Martinez</h3>
+<p class="text-sm text-primary font-medium">Clinical Nutritionist</p>
+</div>
+<button class="text-slate-400 hover:text-primary">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+<p class="mb-4 text-sm text-slate-500 dark:text-slate-400 line-clamp-2">Helping you achieve your health goals through personalized meal planning and dietary advice.</p>
+<div class="mt-auto flex flex-col gap-3">
+<div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined text-[16px]">location_on</span>
+<span>Healthy Living Center</span>
+</div>
+<div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined text-[16px]">payments</span>
+<span>$90 / consult</span>
+</div>
+<button class="mt-2 w-full rounded-lg bg-primary py-2.5 text-sm font-bold text-white transition-colors hover:bg-primary-dark">
+                                Book Now
+                            </button>
+</div>
+</div>
+<!-- Card 6 -->
+<div class="group flex flex-col rounded-xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 shadow-sm transition-all hover:shadow-md hover:border-primary/30">
+<div class="relative mb-4 h-48 w-full overflow-hidden rounded-lg">
+<img alt="Portrait of Dr. Robert Lang" class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" data-alt="Portrait of an older male doctor" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAsHXExVvzLGNCcjvx4zGlK7dDZMKqYnmPw0HCjcKAYpHS3bZ-vLge4M8pnZ3gnrMw3Qsf-L7gnNcrUwyb44SqYxjgvRyvlgF78z2jhKTKA536XNXun4UJ8AWCKPg2q3nuJG7AQHS7if-d_EwExLJNsXVQMN9BbvToVkUhY5SdjCmYIv3oWkXO2YMOBsaR3GRA5DVsqDFzD_mv4YkeN1U-W946E6E9kcht3MszZ5ORXx2wJbRvWaZYlPxj1Fvh9E0ULOnJdJtftYOM"/>
+<div class="absolute right-2 top-2 rounded bg-white/90 px-1.5 py-0.5 text-xs font-bold text-slate-900 shadow-sm backdrop-blur-sm">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-yellow-500 fill-1">star</span>
+                                    4.6 (180)
+                                </div>
+</div>
+</div>
+<div class="mb-1 flex items-start justify-between">
+<div>
+<h3 class="font-bold text-slate-900 dark:text-white text-lg">Dr. Robert Lang</h3>
+<p class="text-sm text-primary font-medium">Sports Medicine</p>
+</div>
+<button class="text-slate-400 hover:text-primary">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+<p class="mb-4 text-sm text-slate-500 dark:text-slate-400 line-clamp-2">Specialist in treating athletes and active individuals to return to peak performance.</p>
+<div class="mt-auto flex flex-col gap-3">
+<div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined text-[16px]">location_on</span>
+<span>Elite Sports Clinic</span>
+</div>
+<div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined text-[16px]">payments</span>
+<span>$130 / session</span>
+</div>
+<button class="mt-2 w-full rounded-lg bg-primary py-2.5 text-sm font-bold text-white transition-colors hover:bg-primary-dark">
+                                Book Now
+                            </button>
+</div>
+</div>
+</div>
+<!-- Pagination -->
+<div class="mt-10 flex items-center justify-center gap-2">
+<button class="flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-white font-bold">1</button>
+<button class="flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 font-medium">2</button>
+<button class="flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 font-medium">3</button>
+<span class="flex h-10 w-10 items-center justify-center text-slate-400">...</span>
+<button class="flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 font-medium">12</button>
+<button class="flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</main>
+</div>
+</div>
+</body></html>

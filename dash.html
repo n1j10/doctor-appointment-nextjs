@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>My Bookings - BookEasy</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#137fec",
+                        "primary-hover": "#0f6ac6",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1a2632",
+                        "border-light": "#e5e7eb",
+                        "border-dark": "#2d3b4a",
+                        "text-main-light": "#111827",
+                        "text-main-dark": "#f3f4f6",
+                        "text-sec-light": "#6b7280",
+                        "text-sec-dark": "#9ca3af",
+                    },
+                    fontFamily: {
+                        display: ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.25rem",
+                        lg: "0.5rem",
+                        xl: "0.75rem",
+                        full: "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-text-main-light dark:text-text-main-dark font-display antialiased min-h-screen flex flex-col">
+<!-- Header / Navigation -->
+<header class="sticky top-0 z-50 bg-surface-light dark:bg-surface-dark border-b border-border-light dark:border-border-dark px-4 sm:px-10 py-3">
+<div class="max-w-[1280px] mx-auto flex items-center justify-between whitespace-nowrap">
+<!-- Logo -->
+<div class="flex items-center gap-3">
+<div class="size-8 text-primary flex items-center justify-center">
+<span class="material-symbols-outlined !text-3xl">calendar_month</span>
+</div>
+<h2 class="text-xl font-bold tracking-tight text-text-main-light dark:text-text-main-dark">BookEasy</h2>
+</div>
+<!-- Desktop Nav -->
+<div class="hidden lg:flex flex-1 justify-end items-center gap-8">
+<nav class="flex items-center gap-6">
+<a class="text-text-sec-light dark:text-text-sec-dark hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="#">Dashboard</a>
+<a class="text-primary text-sm font-bold transition-colors" href="#">My Bookings</a>
+<a class="text-text-sec-light dark:text-text-sec-dark hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="#">Profile</a>
+<a class="text-text-sec-light dark:text-text-sec-dark hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="#">Support</a>
+</nav>
+<div class="flex items-center gap-4 pl-4 border-l border-border-light dark:border-border-dark">
+<button class="bg-primary hover:bg-primary-hover text-white text-sm font-bold h-10 px-5 rounded-lg transition-colors shadow-sm shadow-primary/20 flex items-center gap-2">
+<span class="material-symbols-outlined !text-lg">add</span>
+                        New Booking
+                    </button>
+<div class="size-10 rounded-full bg-cover bg-center border-2 border-white dark:border-surface-dark shadow-sm" data-alt="User profile picture showing a smiling man" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDp6JJg3Rk9OHKltUZV9Jf-hY2IiWE7PWg4RLaoOVf8ZA77RcztEpVVIr_AJopvDwUamkFusdURd_A12m3crgbg764FJq9Q4OqZIqwpcNBhkX8P2kKx43ii3If1kr7p1zZokk0x8MVxelOv4OmqsDT_Ajyg3YxcJPRVdEcSZMY_T4nM_lhJcsBut_dm7Lemx8aO72DT2ouhcAJsiARyfzIwmKTxQd8RpIXgHTslUeS0xTYTjT5zQEXEwSgtRjaLQdF2i1vf7hNQIvk");'>
+</div>
+</div>
+</div>
+<!-- Mobile Menu Toggle -->
+<button class="lg:hidden text-text-main-light dark:text-text-main-dark">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-grow w-full px-4 sm:px-6 lg:px-8 py-8">
+<div class="max-w-[960px] mx-auto space-y-8">
+<!-- Page Header -->
+<div class="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
+<div class="space-y-2">
+<h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-text-main-light dark:text-text-main-dark">My Bookings</h1>
+<p class="text-text-sec-light dark:text-text-sec-dark text-base">Manage your upcoming appointments and history</p>
+</div>
+<!-- Mobile Actions -->
+<div class="flex sm:hidden w-full">
+<button class="w-full bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark hover:bg-background-light dark:hover:bg-background-dark text-text-main-light dark:text-text-main-dark font-semibold h-10 px-4 rounded-lg transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined !text-lg">calendar_add_on</span>
+                        Book Appointment
+                    </button>
+</div>
+</div>
+<!-- Filter Tabs -->
+<div class="border-b border-border-light dark:border-border-dark">
+<nav aria-label="Tabs" class="flex gap-8">
+<a class="border-b-2 border-primary text-primary py-4 px-1 text-sm font-bold flex items-center gap-2" href="#">
+<span class="material-symbols-outlined !text-lg">event_upcoming</span>
+                        Upcoming
+                        <span class="bg-primary/10 text-primary py-0.5 px-2 rounded-full text-xs">4</span>
+</a>
+<a class="border-b-2 border-transparent text-text-sec-light dark:text-text-sec-dark hover:text-text-main-light dark:hover:text-text-main-dark hover:border-border-light dark:hover:border-border-dark py-4 px-1 text-sm font-medium flex items-center gap-2 transition-colors" href="#">
+<span class="material-symbols-outlined !text-lg">history</span>
+                        Past
+                    </a>
+<a class="border-b-2 border-transparent text-text-sec-light dark:text-text-sec-dark hover:text-text-main-light dark:hover:text-text-main-dark hover:border-border-light dark:hover:border-border-dark py-4 px-1 text-sm font-medium flex items-center gap-2 transition-colors" href="#">
+<span class="material-symbols-outlined !text-lg">cancel</span>
+                        Canceled
+                    </a>
+</nav>
+</div>
+<!-- Bookings List -->
+<div class="@container">
+<div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm border border-border-light dark:border-border-dark overflow-hidden">
+<!-- Search/Filter Toolbar within Table -->
+<div class="p-4 border-b border-border-light dark:border-border-dark flex flex-col sm:flex-row gap-4 items-center justify-between">
+<div class="relative w-full sm:max-w-xs">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-text-sec-light dark:text-text-sec-dark !text-lg">search</span>
+</div>
+<input class="block w-full pl-10 pr-3 py-2 border border-border-light dark:border-border-dark rounded-lg leading-5 bg-background-light dark:bg-background-dark text-text-main-light dark:text-text-main-dark placeholder-text-sec-light dark:placeholder-text-sec-dark focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary sm:text-sm" placeholder="Search bookings..." type="text"/>
+</div>
+<div class="flex items-center gap-2 w-full sm:w-auto">
+<button class="flex-1 sm:flex-none items-center justify-center px-4 py-2 border border-border-light dark:border-border-dark rounded-lg text-sm font-medium text-text-sec-light dark:text-text-sec-dark hover:bg-background-light dark:hover:bg-background-dark bg-surface-light dark:bg-surface-dark transition-colors flex gap-2">
+<span class="material-symbols-outlined !text-lg">filter_list</span>
+                                Filter
+                            </button>
+<button class="flex-1 sm:flex-none items-center justify-center px-4 py-2 border border-border-light dark:border-border-dark rounded-lg text-sm font-medium text-text-sec-light dark:text-text-sec-dark hover:bg-background-light dark:hover:bg-background-dark bg-surface-light dark:bg-surface-dark transition-colors flex gap-2">
+<span class="material-symbols-outlined !text-lg">download</span>
+                                Export
+                            </button>
+</div>
+</div>
+<!-- Table -->
+<div class="overflow-x-auto">
+<table class="min-w-full divide-y divide-border-light dark:divide-border-dark">
+<thead class="bg-background-light dark:bg-background-dark">
+<tr>
+<th class="px-6 py-3 text-left text-xs font-semibold text-text-sec-light dark:text-text-sec-dark uppercase tracking-wider" scope="col">Service Details</th>
+<th class="px-6 py-3 text-left text-xs font-semibold text-text-sec-light dark:text-text-sec-dark uppercase tracking-wider hidden sm:table-cell" scope="col">Provider</th>
+<th class="px-6 py-3 text-left text-xs font-semibold text-text-sec-light dark:text-text-sec-dark uppercase tracking-wider" scope="col">Date &amp; Time</th>
+<th class="px-6 py-3 text-left text-xs font-semibold text-text-sec-light dark:text-text-sec-dark uppercase tracking-wider" scope="col">Status</th>
+<th class="relative px-6 py-3" scope="col">
+<span class="sr-only">Actions</span>
+</th>
+</tr>
+</thead>
+<tbody class="bg-surface-light dark:bg-surface-dark divide-y divide-border-light dark:divide-border-dark">
+<!-- Row 1 -->
+<tr class="hover:bg-background-light dark:hover:bg-[#1e2a36] transition-colors group">
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex items-center">
+<div class="flex-shrink-0 h-10 w-10 bg-primary/10 rounded-lg flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">content_cut</span>
+</div>
+<div class="ml-4">
+<div class="text-sm font-bold text-text-main-light dark:text-text-main-dark">Haircut &amp; Styling</div>
+<div class="text-sm text-text-sec-light dark:text-text-sec-dark sm:hidden">Sarah Jenkins</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap hidden sm:table-cell">
+<div class="text-sm text-text-main-light dark:text-text-main-dark">Sarah Jenkins</div>
+<div class="text-xs text-text-sec-light dark:text-text-sec-dark">Senior Stylist</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="text-sm text-text-main-light dark:text-text-main-dark font-medium">Oct 24, 2023</div>
+<div class="text-sm text-text-sec-light dark:text-text-sec-dark">10:00 AM</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 border border-green-200 dark:border-green-800">
+                                            Confirmed
+                                        </span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+<div class="flex justify-end gap-2 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
+<button class="text-primary hover:text-primary-hover dark:hover:text-white font-semibold text-xs bg-primary/10 hover:bg-primary/20 py-1.5 px-3 rounded">Reschedule</button>
+<button class="text-text-sec-light dark:text-text-sec-dark hover:text-red-600 dark:hover:text-red-400 p-1 rounded hover:bg-red-50 dark:hover:bg-red-900/20">
+<span class="material-symbols-outlined !text-lg">close</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-background-light dark:hover:bg-[#1e2a36] transition-colors group">
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex items-center">
+<div class="flex-shrink-0 h-10 w-10 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center text-purple-600 dark:text-purple-300">
+<span class="material-symbols-outlined">spa</span>
+</div>
+<div class="ml-4">
+<div class="text-sm font-bold text-text-main-light dark:text-text-main-dark">Manicure Deluxe</div>
+<div class="text-sm text-text-sec-light dark:text-text-sec-dark sm:hidden">The Nail Bar</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap hidden sm:table-cell">
+<div class="text-sm text-text-main-light dark:text-text-main-dark">The Nail Bar</div>
+<div class="text-xs text-text-sec-light dark:text-text-sec-dark">Station 4</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="text-sm text-text-main-light dark:text-text-main-dark font-medium">Oct 28, 2023</div>
+<div class="text-sm text-text-sec-light dark:text-text-sec-dark">2:00 PM</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 border border-yellow-200 dark:border-yellow-800">
+                                            Pending
+                                        </span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+<div class="flex justify-end gap-2 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
+<button class="text-text-sec-light dark:text-text-sec-dark hover:text-text-main-light dark:hover:text-text-main-dark font-semibold text-xs bg-background-light dark:bg-border-dark hover:bg-border-light py-1.5 px-3 rounded border border-border-light dark:border-border-dark">Details</button>
+<button class="text-text-sec-light dark:text-text-sec-dark hover:text-red-600 dark:hover:text-red-400 p-1 rounded hover:bg-red-50 dark:hover:bg-red-900/20">
+<span class="material-symbols-outlined !text-lg">close</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-background-light dark:hover:bg-[#1e2a36] transition-colors group">
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex items-center">
+<div class="flex-shrink-0 h-10 w-10 bg-orange-100 dark:bg-orange-900/30 rounded-lg flex items-center justify-center text-orange-600 dark:text-orange-300">
+<span class="material-symbols-outlined">self_improvement</span>
+</div>
+<div class="ml-4">
+<div class="text-sm font-bold text-text-main-light dark:text-text-main-dark">Deep Tissue Massage</div>
+<div class="text-sm text-text-sec-light dark:text-text-sec-dark sm:hidden">Wellness Center</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap hidden sm:table-cell">
+<div class="text-sm text-text-main-light dark:text-text-main-dark">Wellness Center</div>
+<div class="text-xs text-text-sec-light dark:text-text-sec-dark">Room 202</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="text-sm text-text-main-light dark:text-text-main-dark font-medium">Nov 05, 2023</div>
+<div class="text-sm text-text-sec-light dark:text-text-sec-dark">11:30 AM</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 border border-green-200 dark:border-green-800">
+                                            Confirmed
+                                        </span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+<div class="flex justify-end gap-2 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
+<button class="text-primary hover:text-primary-hover dark:hover:text-white font-semibold text-xs bg-primary/10 hover:bg-primary/20 py-1.5 px-3 rounded">Reschedule</button>
+<button class="text-text-sec-light dark:text-text-sec-dark hover:text-red-600 dark:hover:text-red-400 p-1 rounded hover:bg-red-50 dark:hover:bg-red-900/20">
+<span class="material-symbols-outlined !text-lg">close</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-background-light dark:hover:bg-[#1e2a36] transition-colors group">
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex items-center">
+<div class="flex-shrink-0 h-10 w-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center text-blue-600 dark:text-blue-300">
+<span class="material-symbols-outlined">medical_services</span>
+</div>
+<div class="ml-4">
+<div class="text-sm font-bold text-text-main-light dark:text-text-main-dark">General Consultation</div>
+<div class="text-sm text-text-sec-light dark:text-text-sec-dark sm:hidden">Dr. Smith</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap hidden sm:table-cell">
+<div class="text-sm text-text-main-light dark:text-text-main-dark">Dr. Smith</div>
+<div class="text-xs text-text-sec-light dark:text-text-sec-dark">Clinic A</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="text-sm text-text-main-light dark:text-text-main-dark font-medium">Nov 12, 2023</div>
+<div class="text-sm text-text-sec-light dark:text-text-sec-dark">9:00 AM</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 border border-green-200 dark:border-green-800">
+                                            Confirmed
+                                        </span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+<div class="flex justify-end gap-2 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
+<button class="text-primary hover:text-primary-hover dark:hover:text-white font-semibold text-xs bg-primary/10 hover:bg-primary/20 py-1.5 px-3 rounded">Reschedule</button>
+<button class="text-text-sec-light dark:text-text-sec-dark hover:text-red-600 dark:hover:text-red-400 p-1 rounded hover:bg-red-50 dark:hover:bg-red-900/20">
+<span class="material-symbols-outlined !text-lg">close</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="bg-surface-light dark:bg-surface-dark px-4 py-3 flex items-center justify-between border-t border-border-light dark:border-border-dark sm:px-6">
+<div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+<div>
+<p class="text-sm text-text-sec-light dark:text-text-sec-dark">
+                                    Showing <span class="font-medium text-text-main-light dark:text-text-main-dark">1</span> to <span class="font-medium text-text-main-light dark:text-text-main-dark">4</span> of <span class="font-medium text-text-main-light dark:text-text-main-dark">12</span> results
+                                </p>
+</div>
+<div>
+<nav aria-label="Pagination" class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
+<a class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark text-sm font-medium text-text-sec-light dark:text-text-sec-dark hover:bg-background-light dark:hover:bg-background-dark" href="#">
+<span class="sr-only">Previous</span>
+<span class="material-symbols-outlined !text-lg">chevron_left</span>
+</a>
+<a aria-current="page" class="z-10 bg-primary/10 border-primary text-primary relative inline-flex items-center px-4 py-2 border text-sm font-bold" href="#">1</a>
+<a class="bg-surface-light dark:bg-surface-dark border-border-light dark:border-border-dark text-text-sec-light dark:text-text-sec-dark hover:bg-background-light dark:hover:bg-background-dark relative inline-flex items-center px-4 py-2 border text-sm font-medium" href="#">2</a>
+<a class="bg-surface-light dark:bg-surface-dark border-border-light dark:border-border-dark text-text-sec-light dark:text-text-sec-dark hover:bg-background-light dark:hover:bg-background-dark relative inline-flex items-center px-4 py-2 border text-sm font-medium" href="#">3</a>
+<a class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark text-sm font-medium text-text-sec-light dark:text-text-sec-dark hover:bg-background-light dark:hover:bg-background-dark" href="#">
+<span class="sr-only">Next</span>
+<span class="material-symbols-outlined !text-lg">chevron_right</span>
+</a>
+</nav>
+</div>
+</div>
+<!-- Mobile Pagination -->
+<div class="flex items-center justify-between w-full sm:hidden">
+<a class="relative inline-flex items-center px-4 py-2 border border-border-light dark:border-border-dark text-sm font-medium rounded-md text-text-sec-light dark:text-text-sec-dark bg-surface-light dark:bg-surface-dark hover:bg-background-light dark:hover:bg-background-dark" href="#">
+                                Previous
+                            </a>
+<a class="ml-3 relative inline-flex items-center px-4 py-2 border border-border-light dark:border-border-dark text-sm font-medium rounded-md text-text-sec-light dark:text-text-sec-dark bg-surface-light dark:bg-surface-dark hover:bg-background-light dark:hover:bg-background-dark" href="#">
+                                Next
+                            </a>
+</div>
+</div>
+</div>
+</div>
+<!-- Quick Tips Section -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="bg-surface-light dark:bg-surface-dark p-6 rounded-xl border border-border-light dark:border-border-dark flex gap-4 items-start shadow-sm">
+<div class="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg text-primary shrink-0">
+<span class="material-symbols-outlined">notifications_active</span>
+</div>
+<div>
+<h3 class="text-base font-bold text-text-main-light dark:text-text-main-dark mb-1">Turn on Reminders</h3>
+<p class="text-sm text-text-sec-light dark:text-text-sec-dark">Get notified 24 hours before your appointment to avoid cancellation fees.</p>
+<button class="mt-3 text-sm font-semibold text-primary hover:underline">Enable Notifications</button>
+</div>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark p-6 rounded-xl border border-border-light dark:border-border-dark flex gap-4 items-start shadow-sm">
+<div class="p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg text-purple-600 dark:text-purple-400 shrink-0">
+<span class="material-symbols-outlined">card_membership</span>
+</div>
+<div>
+<h3 class="text-base font-bold text-text-main-light dark:text-text-main-dark mb-1">Membership Benefits</h3>
+<p class="text-sm text-text-sec-light dark:text-text-sec-dark">You have 2 free rescheduling tokens left this month.</p>
+<button class="mt-3 text-sm font-semibold text-purple-600 dark:text-purple-400 hover:underline">View Membership</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

@@ -1,0 +1,106 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  CUSTOMER
+  PROVIDER
+}
+
+enum AppointmentStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELED
+}
+
+model User {
+  id           String        @id @default(cuid())
+  email        String        @unique
+  passwordHash String
+  name         String
+  role         Role          @default(CUSTOMER)
+  image        String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  provider     Provider?
+  appointments Appointment[]
+  reviews      Review[]
+}
+
+model Provider {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  specialty   String
+  bio         String   @db.Text
+  experience  Int      @default(0)
+  location    String
+  address     String?
+  image       String?
+  rating      Float    @default(0)
+  reviewCount Int      @default(0)
+  priceMin    Int      @default(0)
+  priceMax    Int      @default(0)
+  languages   String[] @default([])
+  isOnline    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  services     Service[]
+  appointments Appointment[]
+  reviews      Review[]
+}
+
+model Service {
+  id          String @id @default(cuid())
+  providerId  String
+  provider    Provider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  name        String
+  description String?
+  duration    Int      // minutes
+  price       Int      // cents
+  icon        String?
+  color       String?  // tailwind color like "blue", "purple", "red", "teal"
+  createdAt   DateTime @default(now())
+
+  appointments Appointment[]
+}
+
+model Appointment {
+  id         String            @id @default(cuid())
+  userId     String
+  user       User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  providerId String
+  provider   Provider          @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  serviceId  String
+  service    Service           @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  date       DateTime
+  time       String            // "10:00 AM"
+  status     AppointmentStatus @default(PENDING)
+  notes      String?           @db.Text
+  location   String?
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @updatedAt
+
+  review Review?
+}
+
+model Review {
+  id            String      @id @default(cuid())
+  userId        String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  providerId    String
+  provider      Provider    @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  appointmentId String      @unique
+  appointment   Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+  rating        Int
+  comment       String?     @db.Text
+  createdAt     DateTime    @default(now())
+}

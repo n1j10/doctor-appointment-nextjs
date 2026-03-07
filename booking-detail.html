@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Booking Details &amp; Review UI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#137fec",
+            "background-light": "#f6f7f8",
+            "background-dark": "#101922",
+          },
+          fontFamily: {
+            "display": ["Manrope", "sans-serif"]
+          },
+          borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+        },
+      },
+    }
+  </script>
+<style>
+    /* Custom scrollbar for better look in modal content if it overflows */
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background-color: #cbd5e1;
+      border-radius: 20px;
+    }
+    .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+      background-color: #334155;
+    }
+  </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen flex items-center justify-center p-4">
+<!-- Modal Overlay Background -->
+<div class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-0"></div>
+<!-- Modal Container -->
+<div class="relative w-full max-w-[800px] bg-white dark:bg-slate-900 rounded-xl shadow-2xl z-10 overflow-hidden flex flex-col max-h-[90vh]">
+<!-- Header -->
+<div class="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
+<div>
+<h2 class="text-xl font-bold text-slate-900 dark:text-white">Appointment Details</h2>
+<p class="text-sm text-slate-500 dark:text-slate-400">Booking #123456789</p>
+</div>
+<button class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<!-- Scrollable Content -->
+<div class="flex-1 overflow-y-auto custom-scrollbar p-6">
+<!-- Client Profile Section -->
+<div class="flex flex-col md:flex-row gap-6 items-start md:items-center mb-8">
+<div class="relative">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-24 w-24 border-4 border-slate-100 dark:border-slate-800 shadow-sm" data-alt="Profile picture of Sarah Jenkins" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCYnT1LGoZwqAyqPIQ96X3r1DfNoY2Ouw0EQy8pYBqM7Khndjx1PyaD8IoWa5mRYO2enF1yXR76lhsz-QhtW2cGgxV7MmIYHNYOLRouJLf2-5fTRkfon8FENVeTlgnRyaqkIQBCVY5MqPvY44RrN3km4CMOtCaUjqCKeIZt-f2c5SIZXwzXeocrxAfmj778Kq0ntNLQj3I1GNhrPLFl8JC9buWspZBmEQUU801juzyhemNdchD_TlU5rnLqATte0UMcyZ-SXzcarlY");'></div>
+<div class="absolute bottom-1 right-1 bg-green-500 border-2 border-white dark:border-slate-900 w-5 h-5 rounded-full" title="Active"></div>
+</div>
+<div class="flex-1 space-y-1">
+<div class="flex flex-wrap items-center gap-3">
+<h3 class="text-2xl font-bold text-slate-900 dark:text-white">Sarah Jenkins</h3>
+<span class="px-3 py-1 text-xs font-semibold bg-primary/10 text-primary rounded-full">Regular Client</span>
+</div>
+<p class="text-slate-500 dark:text-slate-400 flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">calendar_month</span>
+            Member since 2021
+          </p>
+<div class="flex gap-2 mt-2">
+<button class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-primary border border-primary/20 bg-primary/5 rounded-lg hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined text-[18px]">chat</span>
+              Message
+            </button>
+<button class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined text-[18px]">history</span>
+              History
+            </button>
+</div>
+</div>
+</div>
+<!-- Info Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+<!-- Details Card -->
+<div class="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-5 border border-slate-100 dark:border-slate-800">
+<h4 class="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">info</span>
+            Session Info
+          </h4>
+<div class="space-y-4">
+<div class="grid grid-cols-[100px_1fr] gap-2 items-baseline">
+<p class="text-sm text-slate-500 dark:text-slate-400">Service</p>
+<p class="text-sm font-medium text-slate-900 dark:text-white">Deep Tissue Massage</p>
+</div>
+<div class="grid grid-cols-[100px_1fr] gap-2 items-baseline">
+<p class="text-sm text-slate-500 dark:text-slate-400">Date</p>
+<p class="text-sm font-medium text-slate-900 dark:text-white">Oct 24, 2023</p>
+</div>
+<div class="grid grid-cols-[100px_1fr] gap-2 items-baseline">
+<p class="text-sm text-slate-500 dark:text-slate-400">Time</p>
+<p class="text-sm font-medium text-slate-900 dark:text-white">2:00 PM - 3:00 PM</p>
+</div>
+<div class="grid grid-cols-[100px_1fr] gap-2 items-baseline">
+<p class="text-sm text-slate-500 dark:text-slate-400">Duration</p>
+<p class="text-sm font-medium text-slate-900 dark:text-white">60 Minutes</p>
+</div>
+<div class="grid grid-cols-[100px_1fr] gap-2 items-baseline">
+<p class="text-sm text-slate-500 dark:text-slate-400">Location</p>
+<p class="text-sm font-medium text-slate-900 dark:text-white">Room 3B</p>
+</div>
+</div>
+</div>
+<!-- Notes Card -->
+<div class="bg-amber-50 dark:bg-amber-900/10 rounded-xl p-5 border border-amber-100 dark:border-amber-900/20">
+<h4 class="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-amber-600 dark:text-amber-500">sticky_note_2</span>
+            Client Notes
+          </h4>
+<p class="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+            Client prefers lavender oil and has a slight sensitivity in the lower back area. Please ensure room temperature is warm.
+          </p>
+<div class="mt-4 pt-4 border-t border-amber-200 dark:border-amber-800/30">
+<p class="text-xs text-slate-500 dark:text-slate-400 italic">Last updated by Admin on Oct 23, 2023</p>
+</div>
+</div>
+</div>
+<!-- Review Section -->
+<div class="border-t border-slate-200 dark:border-slate-800 pt-6">
+<div class="flex justify-between items-center mb-4">
+<h3 class="text-lg font-bold text-slate-900 dark:text-white">Session Review</h3>
+<span class="text-xs font-medium text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">Private</span>
+</div>
+<div class="bg-white dark:bg-slate-900 rounded-lg">
+<p class="text-sm text-slate-500 dark:text-slate-400 mb-4">Rate the client's session punctuality and overall experience.</p>
+<div class="flex flex-col sm:flex-row gap-8">
+<div class="space-y-2">
+<label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Rating</label>
+<div class="flex gap-1">
+<button class="text-yellow-400 hover:text-yellow-500 transition-transform hover:scale-110">
+<span class="material-symbols-outlined fill-current text-3xl" style="font-variation-settings: 'FILL' 1;">star</span>
+</button>
+<button class="text-yellow-400 hover:text-yellow-500 transition-transform hover:scale-110">
+<span class="material-symbols-outlined fill-current text-3xl" style="font-variation-settings: 'FILL' 1;">star</span>
+</button>
+<button class="text-yellow-400 hover:text-yellow-500 transition-transform hover:scale-110">
+<span class="material-symbols-outlined fill-current text-3xl" style="font-variation-settings: 'FILL' 1;">star</span>
+</button>
+<button class="text-yellow-400 hover:text-yellow-500 transition-transform hover:scale-110">
+<span class="material-symbols-outlined fill-current text-3xl" style="font-variation-settings: 'FILL' 1;">star</span>
+</button>
+<button class="text-slate-300 dark:text-slate-600 hover:text-yellow-400 transition-transform hover:scale-110">
+<span class="material-symbols-outlined text-3xl">star</span>
+</button>
+</div>
+</div>
+<div class="flex-1 space-y-2">
+<label class="text-sm font-semibold text-slate-700 dark:text-slate-300" for="review-notes">Internal Notes</label>
+<textarea class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-3 text-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all resize-none placeholder-slate-400" id="review-notes" placeholder="Add any private notes about this session..." rows="3"></textarea>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Actions -->
+<div class="border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 p-6 flex flex-col sm:flex-row justify-end gap-3 sticky bottom-0 z-20">
+<button class="px-6 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-medium text-sm hover:bg-white dark:hover:bg-slate-800 transition-colors w-full sm:w-auto">
+        Cancel
+      </button>
+<button class="px-6 py-2.5 rounded-lg bg-primary text-white font-medium text-sm shadow-lg shadow-primary/30 hover:bg-primary/90 transition-all active:scale-[0.98] w-full sm:w-auto flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">check</span>
+        Save Review
+      </button>
+</div>
+</div>
+</body></html>

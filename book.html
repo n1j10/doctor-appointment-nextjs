@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Book Appointment Form Flow</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display min-h-screen flex flex-col overflow-x-hidden">
+<!-- Header -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-slate-800 bg-white dark:bg-background-dark px-10 py-3 sticky top-0 z-50">
+<div class="flex items-center gap-4">
+<div class="size-8 text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-3xl">calendar_month</span>
+</div>
+<h2 class="text-slate-900 dark:text-slate-100 text-lg font-bold leading-tight tracking-[-0.015em]">BookEasy</h2>
+</div>
+<div class="flex flex-1 justify-end gap-8">
+<div class="hidden md:flex items-center gap-9">
+<a class="text-slate-900 dark:text-slate-100 text-sm font-medium hover:text-primary transition-colors" href="#">Home</a>
+<a class="text-slate-900 dark:text-slate-100 text-sm font-medium hover:text-primary transition-colors" href="#">Services</a>
+<a class="text-slate-900 dark:text-slate-100 text-sm font-medium hover:text-primary transition-colors" href="#">About Us</a>
+<a class="text-slate-900 dark:text-slate-100 text-sm font-medium hover:text-primary transition-colors" href="#">Contact</a>
+</div>
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary hover:bg-blue-600 transition-colors text-white text-sm font-bold leading-normal tracking-[0.015em]">
+<span class="truncate">Sign In</span>
+</button>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 flex justify-center py-10 px-4 md:px-10">
+<div class="w-full max-w-[1024px] flex flex-col gap-8">
+<!-- Hero Section -->
+<div class="flex flex-col gap-3">
+<h1 class="text-slate-900 dark:text-slate-100 text-3xl md:text-4xl font-black leading-tight tracking-[-0.033em]">Book an Appointment</h1>
+<p class="text-slate-500 dark:text-slate-400 text-base font-normal">Follow the steps below to schedule your service with our expert team.</p>
+</div>
+<!-- Stepper -->
+<div class="w-full">
+<!-- Mobile Steps (Dropdown or simpler view) -->
+<div class="md:hidden flex justify-between items-center bg-white dark:bg-slate-800 p-4 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 mb-6">
+<span class="font-bold text-slate-900 dark:text-slate-100">Step 1 of 4</span>
+<span class="text-primary font-medium">Select Service</span>
+</div>
+<!-- Desktop Stepper -->
+<div class="hidden md:flex items-center justify-between w-full mb-8 relative">
+<div class="absolute left-0 top-1/2 w-full h-1 bg-slate-200 dark:bg-slate-700 -z-10 -translate-y-1/2 rounded-full"></div>
+<!-- Step 1: Active -->
+<div class="flex flex-col items-center gap-2 bg-background-light dark:bg-background-dark px-2">
+<div class="size-10 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm shadow-lg shadow-primary/30 ring-4 ring-background-light dark:ring-background-dark">1</div>
+<span class="text-primary font-bold text-sm">Select Service</span>
+</div>
+<!-- Step 2: Inactive -->
+<div class="flex flex-col items-center gap-2 bg-background-light dark:bg-background-dark px-2">
+<div class="size-10 rounded-full bg-white dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-600 text-slate-500 dark:text-slate-400 flex items-center justify-center font-bold text-sm ring-4 ring-background-light dark:ring-background-dark">2</div>
+<span class="text-slate-500 dark:text-slate-400 font-medium text-sm">Date &amp; Time</span>
+</div>
+<!-- Step 3: Inactive -->
+<div class="flex flex-col items-center gap-2 bg-background-light dark:bg-background-dark px-2">
+<div class="size-10 rounded-full bg-white dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-600 text-slate-500 dark:text-slate-400 flex items-center justify-center font-bold text-sm ring-4 ring-background-light dark:ring-background-dark">3</div>
+<span class="text-slate-500 dark:text-slate-400 font-medium text-sm">Details</span>
+</div>
+<!-- Step 4: Inactive -->
+<div class="flex flex-col items-center gap-2 bg-background-light dark:bg-background-dark px-2">
+<div class="size-10 rounded-full bg-white dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-600 text-slate-500 dark:text-slate-400 flex items-center justify-center font-bold text-sm ring-4 ring-background-light dark:ring-background-dark">4</div>
+<span class="text-slate-500 dark:text-slate-400 font-medium text-sm">Confirm</span>
+</div>
+</div>
+</div>
+<!-- Content Area -->
+<div class="flex flex-col lg:flex-row gap-8">
+<!-- Main Form Column -->
+<div class="flex-1 bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+<div class="p-6 border-b border-slate-100 dark:border-slate-700">
+<h2 class="text-slate-900 dark:text-slate-100 text-xl font-bold">Step 1: Choose a Service</h2>
+<p class="text-slate-500 dark:text-slate-400 text-sm mt-1">Please select the type of appointment you would like to book.</p>
+</div>
+<div class="p-6 flex flex-col gap-4">
+<!-- Radio Option 1 -->
+<label class="group relative flex cursor-pointer rounded-xl border border-slate-200 dark:border-slate-700 p-4 hover:border-primary hover:bg-primary/5 transition-all has-[:checked]:border-primary has-[:checked]:bg-primary/5 has-[:checked]:ring-1 has-[:checked]:ring-primary">
+<input checked="" class="peer sr-only" name="service_type" type="radio"/>
+<div class="flex w-full items-center gap-4">
+<div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-blue-100 text-primary dark:bg-primary/20">
+<span class="material-symbols-outlined">stethoscope</span>
+</div>
+<div class="flex flex-col">
+<span class="font-bold text-slate-900 dark:text-slate-100">Standard Consultation</span>
+<span class="text-sm text-slate-500 dark:text-slate-400">30 mins • Basic checkup and general advice</span>
+</div>
+<div class="ml-auto flex shrink-0">
+<div class="h-6 w-6 rounded-full border-2 border-slate-300 peer-checked:border-primary peer-checked:bg-primary flex items-center justify-center transition-colors">
+<div class="h-2.5 w-2.5 rounded-full bg-white opacity-0 peer-checked:opacity-100 group-has-[:checked]:opacity-100 transition-opacity"></div>
+</div>
+</div>
+</div>
+<!-- Price Tag -->
+<div class="absolute top-4 right-14 text-sm font-bold text-slate-900 dark:text-slate-100">$50</div>
+</label>
+<!-- Radio Option 2 -->
+<label class="group relative flex cursor-pointer rounded-xl border border-slate-200 dark:border-slate-700 p-4 hover:border-primary hover:bg-primary/5 transition-all has-[:checked]:border-primary has-[:checked]:bg-primary/5 has-[:checked]:ring-1 has-[:checked]:ring-primary">
+<input class="peer sr-only" name="service_type" type="radio"/>
+<div class="flex w-full items-center gap-4">
+<div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400">
+<span class="material-symbols-outlined">medical_services</span>
+</div>
+<div class="flex flex-col">
+<span class="font-bold text-slate-900 dark:text-slate-100">Premium Package</span>
+<span class="text-sm text-slate-500 dark:text-slate-400">60 mins • Full diagnostic and detailed report</span>
+</div>
+<div class="ml-auto flex shrink-0">
+<div class="h-6 w-6 rounded-full border-2 border-slate-300 peer-checked:border-primary peer-checked:bg-primary flex items-center justify-center transition-colors">
+<div class="h-2.5 w-2.5 rounded-full bg-white opacity-0 peer-checked:opacity-100 group-has-[:checked]:opacity-100 transition-opacity"></div>
+</div>
+</div>
+</div>
+<!-- Price Tag -->
+<div class="absolute top-4 right-14 text-sm font-bold text-slate-900 dark:text-slate-100">$120</div>
+</label>
+<!-- Radio Option 3 -->
+<label class="group relative flex cursor-pointer rounded-xl border border-slate-200 dark:border-slate-700 p-4 hover:border-primary hover:bg-primary/5 transition-all has-[:checked]:border-primary has-[:checked]:bg-primary/5 has-[:checked]:ring-1 has-[:checked]:ring-primary">
+<input class="peer sr-only" name="service_type" type="radio"/>
+<div class="flex w-full items-center gap-4">
+<div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400">
+<span class="material-symbols-outlined">ambulance</span>
+</div>
+<div class="flex flex-col">
+<span class="font-bold text-slate-900 dark:text-slate-100">Emergency Service</span>
+<span class="text-sm text-slate-500 dark:text-slate-400">Immediate • Priority assistance queue</span>
+</div>
+<div class="ml-auto flex shrink-0">
+<div class="h-6 w-6 rounded-full border-2 border-slate-300 peer-checked:border-primary peer-checked:bg-primary flex items-center justify-center transition-colors">
+<div class="h-2.5 w-2.5 rounded-full bg-white opacity-0 peer-checked:opacity-100 group-has-[:checked]:opacity-100 transition-opacity"></div>
+</div>
+</div>
+</div>
+<!-- Price Tag -->
+<div class="absolute top-4 right-14 text-sm font-bold text-slate-900 dark:text-slate-100">$200</div>
+</label>
+<!-- Radio Option 4 -->
+<label class="group relative flex cursor-pointer rounded-xl border border-slate-200 dark:border-slate-700 p-4 hover:border-primary hover:bg-primary/5 transition-all has-[:checked]:border-primary has-[:checked]:bg-primary/5 has-[:checked]:ring-1 has-[:checked]:ring-primary">
+<input class="peer sr-only" name="service_type" type="radio"/>
+<div class="flex w-full items-center gap-4">
+<div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-teal-100 text-teal-600 dark:bg-teal-900/30 dark:text-teal-400">
+<span class="material-symbols-outlined">clinical_notes</span>
+</div>
+<div class="flex flex-col">
+<span class="font-bold text-slate-900 dark:text-slate-100">Follow-up Visit</span>
+<span class="text-sm text-slate-500 dark:text-slate-400">15 mins • Review progress on previous treatment</span>
+</div>
+<div class="ml-auto flex shrink-0">
+<div class="h-6 w-6 rounded-full border-2 border-slate-300 peer-checked:border-primary peer-checked:bg-primary flex items-center justify-center transition-colors">
+<div class="h-2.5 w-2.5 rounded-full bg-white opacity-0 peer-checked:opacity-100 group-has-[:checked]:opacity-100 transition-opacity"></div>
+</div>
+</div>
+</div>
+<!-- Price Tag -->
+<div class="absolute top-4 right-14 text-sm font-bold text-slate-900 dark:text-slate-100">$30</div>
+</label>
+</div>
+<div class="bg-slate-50 dark:bg-slate-900/50 p-6 flex justify-end border-t border-slate-100 dark:border-slate-700">
+<button class="bg-primary hover:bg-blue-600 text-white font-bold py-3 px-8 rounded-lg transition-colors flex items-center gap-2">
+                            Next Step
+                            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Sidebar / Summary -->
+<div class="w-full lg:w-80 shrink-0">
+<div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 sticky top-24">
+<h3 class="text-slate-900 dark:text-slate-100 font-bold text-lg mb-4">Booking Summary</h3>
+<div class="space-y-4">
+<div class="flex justify-between items-start pb-4 border-b border-slate-100 dark:border-slate-700">
+<div class="flex flex-col">
+<span class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Service</span>
+<span class="text-slate-900 dark:text-slate-100 font-medium">Standard Consultation</span>
+</div>
+<span class="text-primary font-bold">$50</span>
+</div>
+<div class="flex flex-col pb-4 border-b border-slate-100 dark:border-slate-700">
+<span class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Duration</span>
+<span class="text-slate-900 dark:text-slate-100 font-medium flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-lg">schedule</span>
+                                    30 Minutes
+                                </span>
+</div>
+<div class="flex flex-col pb-4 border-b border-slate-100 dark:border-slate-700 opacity-50">
+<span class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Date &amp; Time</span>
+<span class="text-slate-500 font-medium italic">Not selected yet</span>
+</div>
+<div class="flex flex-col pb-4 opacity-50">
+<span class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Specialist</span>
+<span class="text-slate-500 font-medium italic">Assigned automatically</span>
+</div>
+</div>
+<div class="mt-6 pt-4 border-t border-dashed border-slate-200 dark:border-slate-600">
+<div class="flex justify-between items-center mb-4">
+<span class="text-slate-500 dark:text-slate-400 font-medium">Total</span>
+<span class="text-2xl font-black text-slate-900 dark:text-slate-100">$50.00</span>
+</div>
+<div class="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg flex gap-3 items-start">
+<span class="material-symbols-outlined text-primary text-xl mt-0.5">info</span>
+<p class="text-xs text-blue-800 dark:text-blue-200 leading-relaxed">
+                                    Free cancellation up to 24 hours before your appointment time.
+                                </p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="mt-auto border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-background-dark py-10 px-10">
+<div class="max-w-[1024px] mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="flex items-center gap-2 text-slate-900 dark:text-slate-100">
+<div class="size-6 text-primary flex items-center justify-center">
+<span class="material-symbols-outlined">calendar_month</span>
+</div>
+<span class="font-bold text-lg">BookEasy</span>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-sm">© 2023 BookEasy Inc. All rights reserved.</p>
+<div class="flex gap-6">
+<a class="text-slate-500 dark:text-slate-400 hover:text-primary transition-colors" href="#">Privacy</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-primary transition-colors" href="#">Terms</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-primary transition-colors" href="#">Support</a>
+</div>
+</div>
+</footer>
+</body></html>
