@@ -3,12 +3,10 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { createClient } from '@/lib/supabase/client';
 import { Stethoscope, Mail, Lock, User, Eye, EyeOff, Loader2, AlertCircle, Stethoscope as DoctorIcon, UserCircle } from 'lucide-react';
 
 export default function SignUpPage() {
     const router = useRouter();
-    const supabase = createClient();
 
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
@@ -29,30 +27,32 @@ export default function SignUpPage() {
         }
 
         setLoading(true);
+        try {
+            const res = await fetch('/api/auth/signup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name,
+                    email,
+                    password,
+                    role,
+                    specialty: role === 'PROVIDER' ? specialty : '',
+                }),
+            });
 
-        const metadata = { name, role };
-        if (role === 'PROVIDER' && specialty) metadata.specialty = specialty;
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok) {
+                setError(data.error || 'Failed to create account');
+                setLoading(false);
+                return;
+            }
 
-        const { data, error: signUpError } = await supabase.auth.signUp({
-            email,
-            password,
-            options: { data: metadata },
-        });
-
-        if (signUpError) {
-            setError(signUpError.message);
-            setLoading(false);
-            return;
-        }
-
-        // If session is immediately available (email confirmation disabled), redirect
-        if (data.session) {
-            const dest = role === 'PROVIDER' ? '/dashboard/provider' : '/dashboard/customer/bookings';
+            const dest = data?.user?.role === 'PROVIDER' ? '/dashboard/provider' : '/dashboard/customer/bookings';
             router.push(dest);
             router.refresh();
-        } else {
-            // Email confirmation required
-            router.push('/login?message=Check your email to confirm your account');
+        } catch {
+            setError('Something went wrong. Please try again.');
+            setLoading(false);
         }
     };
 
@@ -96,6 +96,9 @@ export default function SignUpPage() {
                                     <span className="text-sm font-semibold">Patient</span>
                                     <span className="text-xs text-slate-500 text-center leading-tight">Browse & book services</span>
                                 </button>
+
+
+                                
                                 <button
                                     type="button"
                                     onClick={() => setRole('PROVIDER')}

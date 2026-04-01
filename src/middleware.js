@@ -1,33 +1,11 @@
-import { createServerClient } from '@supabase/ssr';
-import { NextResponse } from 'next/server';
+﻿import { NextResponse } from 'next/server';
+import { SESSION_COOKIE_NAME, verifySessionToken } from '@/lib/auth/session';
 
 export async function middleware(request) {
-    let supabaseResponse = NextResponse.next({ request });
-
-    const supabase = createServerClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-        {
-            cookies: {
-                getAll() {
-                    return request.cookies.getAll();
-                },
-                setAll(cookiesToSet) {
-                    cookiesToSet.forEach(({ name, value }) =>
-                        request.cookies.set(name, value)
-                    );
-                    supabaseResponse = NextResponse.next({ request });
-                    cookiesToSet.forEach(({ name, value, options }) =>
-                        supabaseResponse.cookies.set(name, value, options)
-                    );
-                },
-            },
-        }
-    );
-
-    // Refresh session — IMPORTANT: don't remove this
-    const { data: { user } } = await supabase.auth.getUser();
-
+    const token = request.cookies.get(SESSION_COOKIE_NAME)?.value;
+    const payload = token ? await verifySessionToken(token) : null;
+    const user = payload?.sub ? payload : null;
+    const role = typeof payload?.role === 'string' ? payload.role : null;
     const { pathname } = request.nextUrl;
 
     // Routes that require authentication
@@ -42,14 +20,6 @@ export async function middleware(request) {
 
     // Role-based guards
     if (user && isProtected) {
-        const { data: profile } = await supabase
-            .from('users')
-            .select('role')
-            .eq('id', user.id)
-            .single();
-
-        const role = profile?.role;
-
         if (pathname.startsWith('/dashboard/provider') && role !== 'PROVIDER') {
             return NextResponse.redirect(new URL('/dashboard/customer/bookings', request.url));
         }
@@ -60,19 +30,13 @@ export async function middleware(request) {
 
     // Redirect logged-in users away from login/signup
     if (user && (pathname === '/login' || pathname === '/signup')) {
-        const { data: profile } = await supabase
-            .from('users')
-            .select('role')
-            .eq('id', user.id)
-            .single();
-
-        if (profile?.role === 'PROVIDER') {
+        if (role === 'PROVIDER') {
             return NextResponse.redirect(new URL('/dashboard/provider', request.url));
         }
         return NextResponse.redirect(new URL('/dashboard/customer/bookings', request.url));
     }
 
-    return supabaseResponse;
+    return NextResponse.next();
 }
 
 export const config = {

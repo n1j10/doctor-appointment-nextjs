@@ -1,18 +1,10 @@
 import Link from 'next/link';
 import { Search, MapPin, CheckCircle2, CalendarDays, Star, CalendarCheck, Stethoscope, Menu, User, LogOut } from 'lucide-react';
-import { createClient } from '@/lib/supabase/server';
+import { getCurrentUser } from '@/lib/auth/server';
 
 export default async function LandingPage() {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  let profile = null;
-  if (user) {
-    const { data } = await supabase.from('users').select('name, role').eq('id', user.id).single();
-    profile = data;
-  }
-
-
-
+  const user = await getCurrentUser();
+  const profile = user ? { name: user.name, role: user.role } : null;
 
   return (
     <div className="relative flex min-h-screen w-full flex-col group/design-root">
@@ -47,6 +39,10 @@ export default async function LandingPage() {
                 <Link href="/dashboard/provider" className="text-text-main text-sm font-medium leading-normal hover:text-primary transition-colors">For Providers</Link>
               )}
             </div>
+
+
+
+
             {profile ? (
               <Link href="/auth/signout" className="flex items-center gap-1.5 text-sm font-medium text-slate-600 hover:text-red-600 transition-colors">
                 <LogOut className="w-4 h-4" /> Sign Out
@@ -81,6 +77,7 @@ export default async function LandingPage() {
           {/* Hero Section */}
 
           <div className="px-6 lg:px-20 py-10 lg:py-20 flex justify-center bg-surface-light">
+            
             <div className="flex flex-col lg:flex-row gap-12 max-w-[1280px] flex-1 items-center">
               {/* Hero Content */}
 

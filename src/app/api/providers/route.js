@@ -1,41 +1,39 @@
-import { NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+﻿import { NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
 
-// GET /api/providers — list all providers with user info and min service price
+// GET /api/providers - list all providers with user info and min service price
 export async function GET() {
-    const supabase = await createClient();
+    try {
+        const providers = await prisma.provider.findMany({
+            orderBy: { rating: 'desc' },
+            include: {
+                user: { select: { name: true, email: true } },
+                services: { select: { price: true } },
+            },
+        });
 
-    const { data: providers, error } = await supabase.from('providers')
-        .select(`
-      id, specialty, bio, avatar_url, rating, review_count,
-      users!inner(name, email),
-      services(price)
-    `)
-        .order('rating', { ascending: false });
+        const formatted = providers.map((p) => {
+            const prices = p.services.map((s) => s.price);
+            const minPrice = prices.length > 0 ? Math.min(...prices) : null;
+            const maxPrice = prices.length > 0 ? Math.max(...prices) : null;
 
-    if (error) {
-        return NextResponse.json({ error: error.message }, { status: 500 });
+            return {
+                id: p.id,
+                name: p.user.name,
+                email: p.user.email,
+                specialty: p.specialty,
+                bio: p.bio,
+                avatarUrl: p.avatarUrl,
+                rating: p.rating,
+                reviewCount: p.reviewCount,
+                minPrice,
+                maxPrice,
+            };
+        });
+
+        return NextResponse.json(formatted);
+    } catch (error) {
+        console.error('Failed to load providers:', error);
+        return NextResponse.json({ error: 'Failed to load providers' }, { status: 500 });
     }
-
-    // Compute min price and format response
-    const formatted = providers.map((p) => {
-        const prices = p.services?.map((s) => s.price) ?? [];
-        const minPrice = prices.length > 0 ? Math.min(...prices) : null;
-        const maxPrice = prices.length > 0 ? Math.max(...prices) : null;
-        
-        return {
-            id: p.id,
-            name: p.users.name,
-            email: p.users.email,
-            specialty: p.specialty,
-            bio: p.bio,
-            avatarUrl: p.avatar_url,
-            rating: p.rating,
-            reviewCount: p.review_count,
-            minPrice,
-            maxPrice,
-        };
-    });
-
-    return NextResponse.json(formatted);
 }

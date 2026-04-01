@@ -72,6 +72,8 @@ export default function ProviderCalendarPage() {
                         </div>
                     </div>
 
+
+
                     {/* Appointments List */}
                     <div className="w-full lg:w-80 space-y-4">
                         <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-5">
@@ -95,6 +97,10 @@ export default function ProviderCalendarPage() {
                             </div>
                         </div>
                     </div>
+
+
+
+
                 </div>
             </main>
         </div>

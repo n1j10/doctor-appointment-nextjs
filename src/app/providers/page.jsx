@@ -1,37 +1,37 @@
 import Link from 'next/link';
-import { createClient } from '@/lib/supabase/server';
+import { prisma } from '@/lib/prisma';
+import { getCurrentUser } from '@/lib/auth/server';
 import {
     Search, LayoutGrid, DollarSign, CalendarDays, MapPin,
     Star, ChevronRight, ChevronLeft, Heart, CreditCard, Stethoscope, LogOut, User
 } from 'lucide-react';
 
 async function getUser() {
-    const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const user = await getCurrentUser();
     if (!user) return null;
-    const { data: profile } = await supabase.from('users').select('name, role').eq('id', user.id).single();
-    return profile;
+    return { name: user.name, role: user.role };
 }
 
 async function getProviders() {
+    const providers = await prisma.provider.findMany({
+        orderBy: { rating: 'desc' },
+        include: {
+            user: { select: { name: true } },
+            services: { select: { price: true } },
+        },
+    });
 
-    const supabase = await createClient();
-    const { data, error } = await supabase
-        .from('providers')
-        .select(`id, specialty, bio, avatar_url, rating, review_count, users!inner(name), services(price)`)
-        .order('rating', { ascending: false });
-    if (error || !data) return [];
-    return data.map((p) => {
-        const prices = p.services?.map((s) => s.price) ?? [];
+    return providers.map((p) => {
+        const prices = p.services.map((s) => s.price);
 
         return {
             id: p.id,
-            name: p.users.name,
+            name: p.user.name,
             specialty: p.specialty,
             bio: p.bio,
-            avatarUrl: p.avatar_url,
+            avatarUrl: p.avatarUrl,
             rating: p.rating,
-            reviewCount: p.review_count,
+            reviewCount: p.reviewCount,
             minPrice: prices.length ? Math.min(...prices) : null,
             maxPrice: prices.length ? Math.max(...prices) : null,
         };
@@ -39,6 +39,7 @@ async function getProviders() {
 }
 
 export default async function ProvidersPage() {
+    //most 100% understandable
     const [user, providers] = await Promise.all([getUser(), getProviders()]);
 
     return (
@@ -87,18 +88,6 @@ export default async function ProvidersPage() {
             </header>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
             <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-6 p-4 md:flex-row md:p-8">
                 {/* Sidebar */}
                 <aside className="w-full md:w-64 lg:w-72 flex-shrink-0">
@@ -136,6 +125,9 @@ export default async function ProvidersPage() {
                         </div>
                     </div>
                 </aside>
+
+
+
 
                 {/* Main */}
                 <main className="flex flex-1 flex-col">

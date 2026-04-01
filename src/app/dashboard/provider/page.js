@@ -1,9 +1,11 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { createClient } from '@/lib/supabase/server';
+import { prisma } from '@/lib/prisma';
+import { getCurrentUser } from '@/lib/auth/server';
+import { toDateOnlyString } from '@/lib/date';
 import {
     Stethoscope, CalendarDays, Clock, CheckCircle2,
-    Users, Activity, DollarSign, LogOut, User
+    Users, Activity, DollarSign, LogOut, User, AlertCircle
 } from 'lucide-react';
 
 const STATUS_CONFIG = {
@@ -14,15 +16,17 @@ const STATUS_CONFIG = {
 };
 
 export default async function ProviderDashboardPage() {
-    const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const user = await getCurrentUser();
     if (!user) redirect('/login?redirectTo=/dashboard/provider');
 
-    const { data: profile } = await supabase.from('users').select('name, role').eq('id', user.id).single();
+    const profile = { name: user.name, role: user.role };
     if (!profile || profile.role !== 'PROVIDER') redirect('/dashboard/customer/bookings');
 
     // Get provider record
-    const { data: provider } = await supabase.from('providers').select('id, specialty, rating, review_count').eq('user_id', user.id).single();
+    const provider = await prisma.provider.findUnique({
+        where: { userId: user.id },
+        select: { id: true, specialty: true, rating: true, reviewCount: true },
+    });
 
     if (!provider) {
         return (
@@ -37,17 +41,24 @@ export default async function ProviderDashboardPage() {
     }
 
     // Get appointments
-    const { data: appointments } = await supabase
-        .from('appointments')
-        .select(`
-      id, date, start_time, end_time, status,
-      services(name, price),
-      users!customer_id(name, email)
-    `)
-        .eq('provider_id', provider.id)
-        .order('date', { ascending: false });
+    const appointments = await prisma.appointment.findMany({
+        where: { providerId: provider.id },
+        orderBy: { date: 'desc' },
+        include: {
+            service: { select: { name: true, price: true } },
+            customer: { select: { name: true, email: true } },
+        },
+    });
 
-    const appts = appointments ?? [];
+    const appts = appointments.map((a) => ({
+        id: a.id,
+        date: toDateOnlyString(a.date),
+        start_time: a.startTime,
+        end_time: a.endTime,
+        status: a.status,
+        services: a.service ? { name: a.service.name, price: a.service.price } : null,
+        users: a.customer ? { name: a.customer.name, email: a.customer.email } : null,
+    }));
     const upcoming = appts.filter((a) => a.status === 'PENDING' || a.status === 'CONFIRMED');
     const completed = appts.filter((a) => a.status === 'COMPLETED');
 
@@ -156,11 +167,13 @@ export default async function ProviderDashboardPage() {
                                 </div>
                                 <div>
                                     <p className="text-sm font-medium text-slate-500">Rating</p>
-                                    <p className="text-2xl font-black text-slate-900">{provider.rating.toFixed(1)} <span className="text-sm font-normal text-slate-500">({provider.review_count})</span></p>
+                                    <p className="text-2xl font-black text-slate-900">{provider.rating.toFixed(1)} <span className="text-sm font-normal text-slate-500">({provider.reviewCount})</span></p>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+
 
                     {/* Recent Appointments */}
                     <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">

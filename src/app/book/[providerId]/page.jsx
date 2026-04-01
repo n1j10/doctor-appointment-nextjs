@@ -6,7 +6,6 @@ import {
     CalendarDays, Stethoscope, Package, Zap, ClipboardList, Clock,
     Info, ArrowRight, ArrowLeft, Loader2, CheckCircle2, User, LogOut
 } from 'lucide-react';
-import { createClient } from '@/lib/supabase/client';
 
 const ICON_MAP = {
     0: <Stethoscope className="w-6 h-6" />,
@@ -26,6 +25,7 @@ const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 function generateTimeSlots(startTime, endTime, duration) {
     const slots = [];
+
     const toMins = (t) => {
         const [h, m] = t.split(':').map(Number);
         return h * 60 + m;
@@ -37,17 +37,20 @@ function generateTimeSlots(startTime, endTime, duration) {
     };
     let cur = toMins(startTime);
     const end = toMins(endTime);
+
     while (cur + duration <= end) {
+
         slots.push({ start: toStr(cur), end: toStr(cur + duration) });
         cur += duration;
     }
     return slots;
-
 }
+
+
+
 
 export default function BookAppointmentPage({ params }) {
     const router = useRouter();
-    const supabase = createClient();
 
     const [providerId, setProviderId] = useState(null);
     const [provider, setProvider] = useState(null);
@@ -67,9 +70,9 @@ export default function BookAppointmentPage({ params }) {
             const { providerId: pid } = await params;
             setProviderId(pid);
 
-            const [providerRes, { data: { user: authUser } }] = await Promise.all([
+            const [providerRes, meRes] = await Promise.all([
                 fetch(`/api/providers/${pid}`),
-                supabase.auth.getUser(),
+                fetch('/api/auth/me', { cache: 'no-store' }),
             ]);
 
             if (providerRes.ok) {
@@ -77,7 +80,13 @@ export default function BookAppointmentPage({ params }) {
                 setProvider(data);
                 if (data.services?.length) setSelectedService(data.services[0]);
             }
-            setUser(authUser);
+
+            if (meRes.ok) {
+                const me = await meRes.json();
+                setUser(me?.user ?? null);
+            } else {
+                setUser(null);
+            }
             setLoading(false);
         }
         init();
@@ -88,6 +97,7 @@ export default function BookAppointmentPage({ params }) {
 
     // Build next 14 days for date picker
     const dateOptions = [];
+
     const today = new Date();
     for (let i = 1; i <= 14; i++) {
         const d = new Date(today);
@@ -100,11 +110,18 @@ export default function BookAppointmentPage({ params }) {
     // Time slots for selected date
     const timeSlots = (() => {
         if (!selectedDate || !selectedService) return [];
+
         const dayNum = new Date(selectedDate).getDay();
+
         const avail = provider?.availability?.find((a) => a.day_of_week === dayNum);
+
         if (!avail) return [];
         return generateTimeSlots(avail.start_time, avail.end_time, selectedService.duration);
     })();
+
+
+
+
 
     const handleBook = async () => {
         if (!selectedService || !selectedDate || !selectedSlot) return;
@@ -123,6 +140,8 @@ export default function BookAppointmentPage({ params }) {
                     notes,
                 }),
             });
+
+            
             if (!res.ok) {
                 const d = await res.json();
                 setError(d.error ?? 'Failed to book appointment');
@@ -200,8 +219,11 @@ export default function BookAppointmentPage({ params }) {
                     {/* Hero */}
                     <div className="flex flex-col gap-1">
                         <h1 className="text-slate-900 text-3xl md:text-4xl font-black leading-tight tracking-tight">Book an Appointment</h1>
+
                         {provider && (
-                            <p className="text-slate-500 text-base">With <span className="font-semibold text-primary">{provider.name}</span> · {provider.specialty}</p>
+                            <p className="text-slate-500 text-base">With
+                             <span className="font-semibold text-primary">{provider.name}</span> 
+                             · {provider.specialty}</p>
                         )}
                     </div>
 
@@ -209,13 +231,11 @@ export default function BookAppointmentPage({ params }) {
                     <div className="hidden md:flex items-center justify-between w-full relative">
                         <div className="absolute left-0 top-1/2 w-full h-1 bg-slate-200 -z-10 -translate-y-1/2 rounded-full" />
 
-
                         {steps.map((s, i) => (
-
                             <div key={s} className="flex flex-col items-center gap-2 bg-background-light px-2">
                                 <div className={`size-10 rounded-full flex items-center justify-center font-bold text-sm ring-4
-                                     ring-background-light ${i < step ? 'bg-green-500 text-white' : i === step ? 'bg-primary text-white shadow-lg shadow-primary/30' 
-                                     : 'bg-white border-2 border-slate-300 text-slate-500'}`}>
+                                     ring-background-light 
+                                     ${i < step ? 'bg-green-500 text-white' : i === step ? 'bg-primary text-white shadow-lg shadow-primary/30' : 'bg-white border-2 border-slate-300 text-slate-500'}`}>
                                     {i < step ? <CheckCircle2 className="w-5 h-5" /> : i + 1}
                                 </div>
                                 <span className={`text-sm font-${i === step ? 'bold text-primary' : 'medium text-slate-500'}`}>{s}</span>
@@ -232,6 +252,10 @@ export default function BookAppointmentPage({ params }) {
                     <div className="flex flex-col lg:flex-row gap-8">
                         {/* Form */}
                         <div className="flex-1 bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+
+
+
+
                             {/* Step 0: Select Service */}
                             {step === 0 && (
                                 <>
@@ -252,12 +276,13 @@ export default function BookAppointmentPage({ params }) {
                                                     </div>
                                                     <div className="flex flex-col">
                                                         <span className="font-bold text-slate-900">{svc.name}</span>
+                                                        
                                                         <span className="text-sm text-slate-500">{svc.duration} mins{svc.description ? ` · ${svc.description}` : ''}</span>
                                                     </div>
                                                     <div className="ml-auto flex shrink-0 items-center gap-3">
                                                         <span className="text-sm font-bold text-slate-900">${svc.price}</span>
-                                                        <div className={`h-6 w-6 rounded-full border-2 flex items-center justify-center transition-colors ${selectedService?.id === svc.id ? 'border-primary bg-primary' : 'border-slate-300'}`}>
-                                                            {selectedService?.id === svc.id && <div className="h-2.5 w-2.5 rounded-full bg-white" />}
+                                                        <div className={`h-6 w-6 rounded-full border-2 flex items-center justify-center transition-colors
+                                                             ${selectedService?.id === svc.id ? 'border-primary bg-primary' : 'border-slate-300'}`}> {selectedService?.id === svc.id && <div className="h-2.5 w-2.5 rounded-full bg-white" />}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -377,6 +402,10 @@ export default function BookAppointmentPage({ params }) {
                                             </div>
                                         ))}
                                     </div>
+
+
+
+
                                     <div className="bg-slate-50 p-6 flex justify-between border-t border-slate-100">
                                         <button onClick={() => setStep(1)} className="flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors">
                                             <ArrowLeft className="w-4 h-4" /> Back
@@ -424,6 +453,7 @@ export default function BookAppointmentPage({ params }) {
                                             {selectedService ? `${selectedService.duration} mins` : '—'}
                                         </span>
                                     </div>
+
                                     <div className="flex flex-col pb-4 border-b border-slate-100">
                                         <span className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Date & Time</span>
                                         <span className="text-slate-900 font-medium text-sm">

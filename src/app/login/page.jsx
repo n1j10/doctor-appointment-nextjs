@@ -3,7 +3,6 @@
 import { useState, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { createClient } from '@/lib/supabase/client';
 import { Stethoscope, Mail, Lock, Eye, EyeOff, Loader2, AlertCircle } from 'lucide-react';
 
 export default function LoginPage() {
@@ -18,12 +17,9 @@ function LoginContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const redirectTo = searchParams.get('redirectTo') || '/';
-    const supabase = createClient();
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-
-    
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
@@ -33,22 +29,30 @@ function LoginContent() {
         setError('');
         setLoading(true);
 
-        const { data, error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+        try {
+            const res = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password }),
+            });
 
-        if (signInError) {
-            setError(signInError.message);
-            setLoading(false);
-            return;
-        }
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok) {
+                setError(data.error || 'Failed to sign in');
+                setLoading(false);
+                return;
+            }
 
-        // Fetch profile for redirect
-        const { data: profile } = await supabase.from('users').select('role').eq('id', data.user.id).single();
-        const destination = redirectTo !== '/' ? redirectTo : profile?.role === 'PROVIDER'
+            const destination = redirectTo !== '/' ? redirectTo : data?.user?.role === 'PROVIDER'
                     ? '/dashboard/provider'
                     : '/dashboard/customer/bookings';
 
-        router.push(destination);
-        router.refresh();
+            router.push(destination);
+            router.refresh();
+        } catch {
+            setError('Something went wrong. Please try again.');
+            setLoading(false);
+        }
     };
 
     return (

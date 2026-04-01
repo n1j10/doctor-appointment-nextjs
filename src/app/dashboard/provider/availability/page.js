@@ -1,7 +1,8 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { revalidatePath } from 'next/cache';
-import { createClient } from '@/lib/supabase/server';
+import { prisma } from '@/lib/prisma';
+import { getCurrentUser } from '@/lib/auth/server';
 import {
     Stethoscope, CalendarDays, Clock, Activity, LogOut, User, Check, AlertCircle, PlusCircle
 } from 'lucide-react';
@@ -9,44 +10,71 @@ import {
 const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 export default async function ProviderAvailabilityPage() {
-    const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+
+
+    const user = await getCurrentUser();
     if (!user) redirect('/login?redirectTo=/dashboard/provider/availability');
 
-    const { data: profile } = await supabase.from('users').select('name, role').eq('id', user.id).single();
+    const profile = { name: user.name, role: user.role };
     if (!profile || profile.role !== 'PROVIDER') redirect('/dashboard/customer/bookings');
 
-    const { data: provider } = await supabase.from('providers').select('id, specialty').eq('user_id', user.id).single();
+    const provider = await prisma.provider.findUnique({
+        where: { userId: user.id },
+        select: { id: true, specialty: true },
+    });
     if (!provider) redirect('/dashboard/provider');
 
-    const { data: availability } = await supabase
-        .from('availability')
-        .select('*')
-        .eq('provider_id', provider.id)
-        .order('day_of_week');
+    const availabilityRows = await prisma.availability.findMany({
+        where: { providerId: provider.id },
+        orderBy: { dayOfWeek: 'asc' },
+    });
+
+    const availability = availabilityRows.map((a) => ({
+        id: a.id,
+        day_of_week: a.dayOfWeek,
+        start_time: a.startTime,
+        end_time: a.endTime,
+    }));
 
     async function updateAvailability(formData) {
         'use server';
-        const supabase = await createClient();
-        const { data: { user } } = await supabase.auth.getUser();
-        const { data: p } = await supabase.from('providers').select('id').eq('user_id', user.id).single();
+        const actionUser = await getCurrentUser();
+        if (!actionUser) return;
+
+        const p = await prisma.provider.findUnique({
+            where: { userId: actionUser.id },
+            select: { id: true },
+        });
         if (!p) return;
 
-        const day_of_week = parseInt(formData.get('day_of_week'));
-        const start_time = formData.get('start_time');
-        const end_time = formData.get('end_time');
+        const dayOfWeek = parseInt(String(formData.get('day_of_week')), 10);
+        const startTime = String(formData.get('start_time') || '').trim();
+        const endTime = String(formData.get('end_time') || '').trim();
         const actionType = formData.get('actionType'); // 'save' or 'delete'
 
         if (actionType === 'delete') {
-            await supabase.from('availability').delete().match({ provider_id: p.id, day_of_week });
+            await prisma.availability.deleteMany({
+                where: { providerId: p.id, dayOfWeek },
+            });
         } else {
-            // Upsert: updating if already exists
-            const { data: existing } = await supabase.from('availability').select('id').match({ provider_id: p.id, day_of_week }).single();
-            if (existing) {
-                await supabase.from('availability').update({ start_time, end_time }).eq('id', existing.id);
-            } else {
-                await supabase.from('availability').insert({ provider_id: p.id, day_of_week, start_time, end_time });
-            }
+            await prisma.availability.upsert({
+                where: {
+                    providerId_dayOfWeek: {
+                        providerId: p.id,
+                        dayOfWeek,
+                    },
+                },
+                update: {
+                    startTime,
+                    endTime,
+                },
+                create: {
+                    providerId: p.id,
+                    dayOfWeek,
+                    startTime,
+                    endTime,
+                },
+            });
         }
 
         revalidatePath('/dashboard/provider/availability');
@@ -110,6 +138,7 @@ export default async function ProviderAvailabilityPage() {
                     </div>
 
                     <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                        
                         <div className="p-5 border-b border-slate-100 bg-slate-50 text-sm font-semibold text-slate-500">
                             <div className="grid grid-cols-12 gap-4 items-center pl-16">
                                 <div className="col-span-4">Day</div>

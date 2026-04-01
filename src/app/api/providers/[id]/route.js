@@ -1,48 +1,78 @@
-import { NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+﻿import { NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
 
-// GET /api/providers/[id] — single provider with services, availability, reviews
+// GET /api/providers/[id] - single provider with services, availability, reviews
 export async function GET(request, { params }) {
     const { id } = await params;
-    const supabase = await createClient();
 
-    const { data: provider, error } = await supabase
-        .from('providers')
-        .select(`
-      id, specialty, bio, avatar_url, rating, review_count,
-      users!inner(id, name, email),
-      services(id, name, description, duration, price),
-      availability(id, day_of_week, start_time, end_time),
-      reviews(
-        id, rating, comment, created_at,
-        users!customer_id(name)
-      )
-    `)
-        .eq('id', id)
-        .single();
+    try {
+        const provider = await prisma.provider.findUnique({
+            where: { id },
+            include: {
+                user: { select: { id: true, name: true, email: true } },
+                services: {
+                    select: {
+                        id: true,
+                        name: true,
+                        description: true,
+                        duration: true,
+                        price: true,
+                    },
+                    orderBy: { name: 'asc' },
+                },
+                availability: {
+                    select: {
+                        id: true,
+                        dayOfWeek: true,
+                        startTime: true,
+                        endTime: true,
+                    },
+                    orderBy: { dayOfWeek: 'asc' },
+                },
+                reviews: {
+                    select: {
+                        id: true,
+                        rating: true,
+                        comment: true,
+                        createdAt: true,
+                        customer: { select: { name: true } },
+                    },
+                    orderBy: { createdAt: 'desc' },
+                },
+            },
+        });
 
-    if (error) {
-        return NextResponse.json({ error: 'Provider not found' }, { status: 404 });
+        if (!provider) {
+            return NextResponse.json({ error: 'Provider not found' }, { status: 404 });
+        }
+
+        return NextResponse.json({
+            id: provider.id,
+            userId: provider.user.id,
+            name: provider.user.name,
+            email: provider.user.email,
+            specialty: provider.specialty,
+            bio: provider.bio,
+            avatarUrl: provider.avatarUrl,
+            rating: provider.rating,
+            reviewCount: provider.reviewCount,
+            services: provider.services,
+            availability: provider.availability.map((a) => ({
+                id: a.id,
+                day_of_week: a.dayOfWeek,
+                start_time: a.startTime,
+                end_time: a.endTime,
+            })),
+            reviews: provider.reviews.map((r) => ({
+                id: r.id,
+                rating: r.rating,
+                comment: r.comment,
+                createdAt: r.createdAt,
+                customerName: r.customer?.name ?? 'Anonymous',
+            })),
+        });
+    } catch (error) {
+        console.error('Failed to load provider:', error);
+        return NextResponse.json({ error: 'Failed to load provider' }, { status: 500 });
     }
-
-    return NextResponse.json({
-        id: provider.id,
-        userId: provider.users.id,
-        name: provider.users.name,
-        email: provider.users.email,
-        specialty: provider.specialty,
-        bio: provider.bio,
-        avatarUrl: provider.avatar_url,
-        rating: provider.rating,
-        reviewCount: provider.review_count,
-        services: provider.services,
-        availability: provider.availability,
-        reviews: provider.reviews?.map((r) => ({
-            id: r.id,
-            rating: r.rating,
-            comment: r.comment,
-            createdAt: r.created_at,
-            customerName: r.users?.name ?? 'Anonymous',
-        })),
-    });
 }

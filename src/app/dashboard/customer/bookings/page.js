@@ -1,6 +1,8 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { createClient } from '@/lib/supabase/server';
+import { prisma } from '@/lib/prisma';
+import { getCurrentUser } from '@/lib/auth/server';
+import { toDateOnlyString } from '@/lib/date';
 import {
     Stethoscope, CalendarDays, Clock, CheckCircle2,
     AlertCircle, LogOut, User, PlusCircle, XCircle
@@ -15,22 +17,52 @@ const STATUS_CONFIG = {
 };
 
 export default async function CustomerBookingsPage() {
-    const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const user = await getCurrentUser();
     if (!user) redirect('/login?redirectTo=/dashboard/customer/bookings');
 
-    const { data: profile } = await supabase.from('users').select('name, role').eq('id', user.id).single();
+    const profile = { name: user.name, role: user.role };
     if (!profile || profile.role !== 'CUSTOMER') redirect('/dashboard/provider');
 
-    const { data: appointments } = await supabase
-        .from('appointments')
-        .select(`
-      id, date, start_time, end_time, status, notes, created_at,
-      services(name, price, duration),
-      providers!inner(id, specialty, avatar_url, users!inner(name))
-    `)
-        .eq('customer_id', user.id)
-        .order('date', { ascending: false });
+    const appointmentRows = await prisma.appointment.findMany({
+        where: { customerId: user.id },
+        orderBy: { date: 'desc' },
+        include: {
+            service: { select: { name: true, price: true, duration: true } },
+            provider: {
+                select: {
+                    id: true,
+                    specialty: true,
+                    avatarUrl: true,
+                    user: { select: { name: true } },
+                },
+            },
+        },
+    });
+
+    const appointments = appointmentRows.map((appt) => ({
+        id: appt.id,
+        date: toDateOnlyString(appt.date),
+        start_time: appt.startTime,
+        end_time: appt.endTime,
+        status: appt.status,
+        notes: appt.notes,
+        created_at: appt.createdAt,
+        services: appt.service
+            ? {
+                name: appt.service.name,
+                price: appt.service.price,
+                duration: appt.service.duration,
+            }
+            : null,
+        providers: appt.provider
+            ? {
+                id: appt.provider.id,
+                specialty: appt.provider.specialty,
+                avatar_url: appt.provider.avatarUrl,
+                users: appt.provider.user ? { name: appt.provider.user.name } : null,
+            }
+            : null,
+    }));
 
     const upcoming = appointments?.filter((a) => a.status !== 'CANCELLED' && a.status !== 'COMPLETED') ?? [];
     const past = appointments?.filter((a) => a.status === 'COMPLETED' || a.status === 'CANCELLED') ?? [];
@@ -95,6 +127,7 @@ export default async function CustomerBookingsPage() {
                                 <div className="flex flex-col gap-4">
                                     {upcoming.map((appt) => {
                                         const status = STATUS_CONFIG[appt.status] ?? STATUS_CONFIG.PENDING;
+                                        
                                         const dateStr = new Date(appt.date + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'long', day: 'numeric', year: 'numeric' });
                                         
                                         return (

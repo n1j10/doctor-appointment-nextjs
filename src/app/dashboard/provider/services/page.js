@@ -1,51 +1,69 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { revalidatePath } from 'next/cache';
-import { createClient } from '@/lib/supabase/server';
+import { prisma } from '@/lib/prisma';
+import { getCurrentUser } from '@/lib/auth/server';
 import {
     Stethoscope, CalendarDays, Clock, Activity, LogOut, User,
     PlusCircle, Trash2, Edit
 } from 'lucide-react';
 
 export default async function ProviderServicesPage() {
-    const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const user = await getCurrentUser();
     if (!user) redirect('/login?redirectTo=/dashboard/provider/services');
 
-    const { data: profile } = await supabase.from('users').select('name, role').eq('id', user.id).single();
+    const profile = { name: user.name, role: user.role };
     if (!profile || profile.role !== 'PROVIDER') redirect('/dashboard/customer/bookings');
 
-    const { data: provider } = await supabase.from('providers').select('id, specialty').eq('user_id', user.id).single();
+    const provider = await prisma.provider.findUnique({
+        where: { userId: user.id },
+        select: { id: true, specialty: true },
+    });
     if (!provider) redirect('/dashboard/provider');
 
-    const { data: services } = await supabase
-        .from('services')
-        .select('*')
-        .eq('provider_id', provider.id)
-        .order('name');
+    const services = await prisma.service.findMany({
+        where: { providerId: provider.id },
+        orderBy: { name: 'asc' },
+    });
 
     async function addService(formData) {
         'use server';
-        const supabase = await createClient();
-        const { data: { user } } = await supabase.auth.getUser();
-        const { data: p } = await supabase.from('providers').select('id').eq('user_id', user.id).single();
+        const actionUser = await getCurrentUser();
+        if (!actionUser) return;
+
+        const p = await prisma.provider.findUnique({
+            where: { userId: actionUser.id },
+            select: { id: true },
+        });
         if (!p) return;
 
-        await supabase.from('services').insert({
-            provider_id: p.id,
-            name: formData.get('name'),
-            description: formData.get('description'),
-            duration: parseInt(formData.get('duration')),
-            price: parseFloat(formData.get('price')),
+        await prisma.service.create({
+            data: {
+                providerId: p.id,
+                name: String(formData.get('name') || '').trim(),
+                description: String(formData.get('description') || '').trim() || null,
+                duration: Number(formData.get('duration')),
+                price: Number(formData.get('price')),
+            },
         });
         revalidatePath('/dashboard/provider/services');
     }
 
+    
+
     async function deleteService(formData) {
         'use server';
-        const supabase = await createClient();
+        const actionUser = await getCurrentUser();
+        if (!actionUser) return;
+
+        const p = await prisma.provider.findUnique({
+            where: { userId: actionUser.id },
+            select: { id: true },
+        });
+        if (!p) return;
+
         const id = formData.get('id');
-        await supabase.from('services').delete().eq('id', id);
+        await prisma.service.deleteMany({ where: { id: String(id), providerId: p.id } });
         revalidatePath('/dashboard/provider/services');
     }
 
@@ -135,6 +153,10 @@ export default async function ProviderServicesPage() {
                                 ))
                             )}
                         </div>
+
+
+
+
                     </div>
 
                     {/* Add New Service Form */}
