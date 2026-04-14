@@ -119,10 +119,6 @@ export default function BookAppointmentPage({ params }) {
         return generateTimeSlots(avail.start_time, avail.end_time, selectedService.duration);
     })();
 
-
-
-
-
     const handleBook = async () => {
         if (!selectedService || !selectedDate || !selectedSlot) return;
         setSubmitting(true);
