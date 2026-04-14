@@ -93,27 +93,16 @@ export default async function LandingPage() {
                 </div>
 
                 {/* Search Bar */}
-                <div className="flex flex-col w-full shadow-lg rounded-xl overflow-hidden border border-slate-200 bg-white">
-                  <div className="flex flex-col md:flex-row w-full items-stretch h-auto md:h-16 divide-y md:divide-y-0 md:divide-x divide-slate-100">
-                    <div className="flex flex-1 items-center px-4 py-3 md:py-0 bg-white hover:bg-slate-50 transition-colors group">
-                      <Search className="w-5 h-5 text-text-sub group-focus-within:text-primary" />
-                      <input
-                        className="w-full bg-transparent border-none focus:ring-0 focus:outline-none text-text-main placeholder:text-text-sub px-3 text-base font-medium h-full"
-                        placeholder="Doctor, condition, or procedure..."
-                      />
-                    </div>
-                    <div className="flex flex-1 items-center px-4 py-3 md:py-0 bg-white hover:bg-slate-50 transition-colors group">
-                      <MapPin className="w-5 h-5 text-text-sub group-focus-within:text-primary" />
-                      <input
-                        className="w-full bg-transparent border-none focus:ring-0 focus:outline-none text-text-main placeholder:text-text-sub px-3 text-base font-medium h-full"
-                        placeholder="City, zip, or neighborhood"
-                      />
-                    </div>
+                <div className="flex flex-col  ">
+                  <div className="flex flex-col md:flex-row  items-stretch h-auto md:h-16 divide-y md:divide-y-0 md:divide-x divide-slate-100">
+              
                     <Link href="/providers" className="flex items-center justify-center bg-primary hover:bg-primary-hover text-white px-8 py-4 md:py-0 font-bold text-base transition-colors md:min-w-[140px]">
-                      Search
+                        Book an Appointment
                     </Link>
                   </div>
                 </div>
+
+
                 <div className="flex items-center gap-4 text-sm text-text-sub mt-2">
                   <span className="flex items-center gap-1">
                     <CheckCircle2 className="w-5 h-5 text-primary" /> Verified Reviews
